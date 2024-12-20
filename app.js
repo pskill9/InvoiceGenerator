@@ -236,37 +236,25 @@ class GoogleSheetsIntegration {
     async sendToSheets(invoiceNumber) {
         try {
             const invoiceData = this.gatherInvoiceData(invoiceNumber);
-            
-            // Create a hidden form
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = this.url;
-            form.target = '_blank'; // Open in new tab
-            form.style.display = 'none';
+            console.log('Sending data to Google Sheets:', invoiceData);
 
-            // Add data as hidden fields
-            Object.entries(invoiceData).forEach(([key, value]) => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                // Convert items array to JSON string
-                input.value = key === 'items' ? JSON.stringify(value) : value;
-                form.appendChild(input);
+            // Send data using fetch with JSON
+            await fetch(this.url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'text/plain', // Changed to text/plain as Google Apps Script will parse JSON from contents
+                },
+                body: JSON.stringify(invoiceData)
             });
 
-            // Add form to body and submit
-            document.body.appendChild(form);
-            form.submit();
-
-            // Clean up
-            setTimeout(() => {
-                document.body.removeChild(form);
-            }, 1000);
-
-            alert('Data sent to Google Sheets! Check the new tab for confirmation.');
+            // With no-cors mode, we can't access the response
+            // but the request was sent successfully if no error was thrown
+            console.log('Request sent to Google Sheets');
+            alert('Data sent to Google Sheets successfully! Check your spreadsheet for the new entry.');
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to send to Google Sheets. Check console for details.');
+            console.error('Error sending to Google Sheets:', error);
+            alert(`Failed to send to Google Sheets: ${error.message}`);
         }
     }
 
@@ -289,7 +277,7 @@ class GoogleSheetsIntegration {
             subtotal: document.getElementById('subtotal').textContent,
             tax: document.getElementById('tax-amount').textContent,
             total: document.getElementById('total').textContent,
-            items: items // This will be converted to JSON string during form submission
+            items: items
         };
     }
 }
