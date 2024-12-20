@@ -3,7 +3,7 @@ const config = {
     company: {
         name: "ANUBIS CONSULTING",
         address: "81-19525 73 Avenue",
-        phone: "5863728531",
+        phone: "+1-586-372-8531",
         email: "team@anubisconsulting.org",
         website: "anubisconsulting.org",
         logoPath: "A.png"

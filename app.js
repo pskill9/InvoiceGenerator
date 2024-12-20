@@ -170,7 +170,7 @@ class InvoicePreview {
                 <div class="client-info">
                     <h3>Bill To:</h3>
                     <p>${data.clientName}</p>
-                    <p>${data.clientEmail}</p>
+                    <p class="client-email">${data.clientEmail}</p>
                     <p>${data.clientAddress}</p>
                 </div>
 

@@ -306,37 +306,68 @@ button {
     margin-bottom: 0.5rem;
 }
 
+/* Apply consistent font and spacing to company details */
+.company-info p {
+    margin-bottom: 0.25rem;
+    font-family: monospace;
+}
+
+/* Special styling for email addresses */
+.company-info p:last-child,
+.client-info .client-email {
+    letter-spacing: 0.75px;
+    word-spacing: 1px;
+}
+
 .invoice-info {
     text-align: right;
+    font-family: monospace;
 }
 
 .invoice-info h2 {
     color: var(--primary-color);
     font-size: 2rem;
     margin-bottom: 0.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .invoice-info .invoice-number {
     color: var(--secondary-color);
     font-size: 1.25rem;
     margin-bottom: 1rem;
-    font-family: monospace;
     letter-spacing: 0.5px;
+}
+
+.invoice-info p {
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
 }
 
 .client-info {
     margin-bottom: 2rem;
+    font-family: monospace;
 }
 
 .client-info h3 {
     color: var(--secondary-color);
     margin-bottom: 0.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.client-info p {
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.5px;
 }
 
 .items-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 2rem;
+}
+
+.items-table {
+    font-family: monospace;
+    letter-spacing: 0.5px;
 }
 
 .items-table th,
@@ -350,12 +381,15 @@ button {
     background-color: var(--background-color);
     color: var(--secondary-color);
     font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .preview-totals {
     margin-left: auto;
     width: 100%;
     max-width: 300px;
+    font-family: monospace;
+    letter-spacing: 0.5px;
 }
 
 .preview-totals .total-row {
@@ -371,6 +405,7 @@ button {
     color: var(--primary-color);
     font-size: 1.25rem;
     margin-top: 0.5rem;
+    letter-spacing: 0.75px;
 }
 
 @media (max-width: 768px) {
