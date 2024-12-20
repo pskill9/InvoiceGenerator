@@ -1,12 +1,12 @@
 const config = {
     // Company Details
     company: {
-        name: "Your Company Name",
-        address: "Your Company Address",
-        phone: "Phone Number",
-        email: "company@email.com",
-        website: "www.company.com",
-        logoPath: "logo.png"
+        name: "ANUBIS CONSULTING",
+        address: "81-19525 73 Avenue",
+        phone: "5863728531",
+        email: "team@anubisconsulting.org",
+        website: "anubisconsulting.org",
+        logoPath: "A.png"
     },
 
     // Invoice Settings
