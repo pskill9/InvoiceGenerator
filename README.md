@@ -9,21 +9,38 @@ A modern web application for generating invoices and automatically updating Goog
 - Invoice generation with customizable fields
 - Automatic Google Sheets integration
 - PDF generation capability
+- Environment-based configuration
 
 ## Setup
 
 1. Clone this repository
-2. Update `config.js` with your company details and logo path
-3. Open `index.html` in a modern web browser
+2. Create a `.env` file in the root directory (see Configuration section below)
+3. Place your company logo in the root directory (default: `logo.svg`)
+4. Open `index.html` in a modern web browser
 
 ## Configuration
 
-### Basic Setup
-Edit `config.js` to customize:
-- Company details
-- Logo path
-- Invoice numbering format
-- Tax rate settings
+### Environment Variables
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Company Details
+COMPANY_NAME=Your Company Name
+COMPANY_ADDRESS=Your Company Address
+COMPANY_PHONE=Your Phone Number
+COMPANY_EMAIL=Your Email
+COMPANY_WEBSITE=Your Website
+COMPANY_LOGO=logo.svg
+
+# Invoice Settings
+INVOICE_PREFIX=INV-
+INVOICE_DATE_FORMAT=YYYY-MM-DD
+INVOICE_CURRENCY=USD
+INVOICE_TAX_RATE=0.1
+
+# Google Sheets Integration
+GOOGLE_SHEETS_URL=Your Google Apps Script Web App URL
+```
 
 ### Google Sheets Integration Setup
 
@@ -37,7 +54,7 @@ Edit `config.js` to customize:
 3. Replace the content with this Google Apps Script code:
 
 ```javascript
-   // Configuration
+// Configuration
 const SPREADSHEET_ID = ''; // Replace with your spreadsheet ID
 const SHEET_NAME = 'Sheet1'; // Update if you renamed your sheet
 
@@ -68,17 +85,17 @@ function doPost(e) {
     }
 
     // Append the form data to the sheet
-   sheet.appendRow([
-         data.timestamp,
-         data.invoiceNumber,
-         data.clientName,
-         data.clientEmail,
-         data.invoiceDate,
-         data.dueDate,
-         data.subtotal,
-         data.tax,
-         data.total
-       ]);
+    sheet.appendRow([
+      data.timestamp,
+      data.invoiceNumber,
+      data.clientName,
+      data.clientEmail,
+      data.invoiceDate,
+      data.dueDate,
+      data.subtotal,
+      data.tax,
+      data.total
+    ]);
     
     // Return success response
     return ContentService.createTextOutput(JSON.stringify({
@@ -97,7 +114,6 @@ function doPost(e) {
     })).setMimeType(ContentService.MimeType.JSON);
   }
 }
-
 ```
 
 4. Deploy the script:
@@ -108,26 +124,41 @@ function doPost(e) {
    - Click "Deploy"
    - Authorize the application when prompted
    - Copy the provided Web App URL
-
-5. Update `config.js`:
-   ```javascript
-   googleSheets: {
-       url: "YOUR_COPIED_WEB_APP_URL"
-   }
-   ```
-
-Note: The Google Sheet must be accessible to your Google account, and you need to authorize the script to run under your account during the first deployment.
+   - Add the URL to your `.env` file as `GOOGLE_SHEETS_URL`
 
 ## Usage
 
-1. Fill in the invoice details in the form
-2. Preview the invoice
-3. Generate PDF and/or send to Google Sheets
-4. Download or print the generated invoice
+1. Open `index.html` in a modern web browser
+2. Fill in the client information:
+   - Client Name
+   - Client Email
+   - Client Address
+
+3. Set invoice details:
+   - Invoice Date
+   - Due Date
+
+4. Add invoice items:
+   - Click "Add Item" to add new items
+   - Fill in description, quantity, and rate for each item
+   - Amounts are calculated automatically
+   - Use the "×" button to remove items
+
+5. Review the invoice:
+   - Click the eye icon to preview the invoice
+   - Check the automatically calculated subtotal, tax, and total
+
+6. Generate and save:
+   - Click the download icon to generate a PDF
+   - The invoice data is automatically sent to your configured Google Sheet
 
 ## Technologies Used
 
 - HTML5
 - CSS3 with modern features
-- Vanilla JavaScript
+- Vanilla JavaScript (ES6+)
+- Font Awesome for icons
+- jsPDF for PDF generation
+- html2canvas for PDF rendering
 - Google Sheets API integration
+- Environment variable support
