@@ -218,7 +218,6 @@ class InvoicePreview {
 class GoogleSheetsIntegration {
     constructor() {
         this.url = config.googleSheets.url;
-        document.getElementById('send-to-sheets').addEventListener('click', () => this.sendToSheets());
     }
 
     generateInvoiceNumber() {
@@ -234,9 +233,9 @@ class GoogleSheetsIntegration {
         return `${year}${month}${day}-${hours}${minutes}${seconds}${millis}`;
     }
 
-    sendToSheets() {
+    async sendToSheets(invoiceNumber) {
         try {
-            const invoiceData = this.gatherInvoiceData();
+            const invoiceData = this.gatherInvoiceData(invoiceNumber);
             
             // Create a hidden form
             const form = document.createElement('form');
@@ -271,7 +270,7 @@ class GoogleSheetsIntegration {
         }
     }
 
-    gatherInvoiceData() {
+    gatherInvoiceData(invoiceNumber) {
         // Get all invoice items
         const items = Array.from(document.querySelectorAll('.item-row')).map(row => ({
             description: row.querySelector('.item-description').value,
@@ -282,7 +281,7 @@ class GoogleSheetsIntegration {
 
         return {
             timestamp: new Date().toISOString(),
-            invoiceNumber: `${config.invoice.prefix}${this.generateInvoiceNumber()}`,
+            invoiceNumber: invoiceNumber,
             clientName: document.getElementById('client-name').value,
             clientEmail: document.getElementById('client-email').value,
             invoiceDate: document.getElementById('invoice-date').value,
@@ -295,14 +294,13 @@ class GoogleSheetsIntegration {
     }
 }
 
-// PDF Generation
-class PDFGenerator {
+// Invoice Generation
+class InvoiceGenerator {
     constructor() {
-        document.getElementById('generate-pdf').addEventListener('click', () => this.generatePDF());
+        document.getElementById('generate-invoice').addEventListener('click', () => this.generateInvoice());
     }
 
-    async generatePDF() {
-        console.log('Starting PDF generation...');
+    async generateInvoice() {
         try {
             // Show preview first
             const preview = new InvoicePreview();
@@ -316,48 +314,62 @@ class PDFGenerator {
                 throw new Error('Preview element not found');
             }
 
-            console.log('Capturing preview as image...');
-            const canvas = await html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                logging: true
-            });
-
-            console.log('Creating PDF...');
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-            });
-
-            // Calculate dimensions
-            const imgWidth = 210; // A4 width in mm
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
-            // Add the image to PDF
-            pdf.addImage(
-                canvas.toDataURL('image/jpeg', 1.0),
-                'JPEG',
-                0,
-                0,
-                imgWidth,
-                imgHeight
-            );
-
-            // Save the PDF
-            // Get invoice number for the filename
+            // Generate invoice number once to use for both PDF and Sheets
             const sheetsIntegration = new GoogleSheetsIntegration();
             const invoiceNumber = `${config.invoice.prefix}${sheetsIntegration.generateInvoiceNumber()}`;
-            pdf.save(`${invoiceNumber}.pdf`);
-            console.log('PDF generated successfully');
+
+            // 1. Generate PDF
+            console.log('Generating PDF...');
+            await this.generatePDF(element, invoiceNumber);
+
+            // 2. Send to Google Sheets
+            console.log('Sending to Google Sheets...');
+            await sheetsIntegration.sendToSheets(invoiceNumber);
+
+            // Success message
+            alert('Invoice generated successfully!\n\n✓ PDF saved\n✓ Data sent to Google Sheets');
 
             // Hide preview
             preview.hidePreview();
         } catch (error) {
-            console.error('Error in PDF generation:', error);
-            alert('An error occurred while generating the PDF. Check console for details.');
+            console.error('Error in invoice generation:', error);
+            alert('An error occurred while generating the invoice. Check console for details.');
         }
+    }
+
+    async generatePDF(element, invoiceNumber) {
+        console.log('Capturing preview as image...');
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            logging: true
+        });
+
+        console.log('Creating PDF...');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        // Calculate dimensions
+        const imgWidth = 210; // A4 width in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Add the image to PDF
+        pdf.addImage(
+            canvas.toDataURL('image/jpeg', 1.0),
+            'JPEG',
+            0,
+            0,
+            imgWidth,
+            imgHeight
+        );
+
+        // Save the PDF
+        pdf.save(`${invoiceNumber}.pdf`);
+        console.log('PDF generated successfully');
     }
 }
 
@@ -367,8 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeCompanyDetails();
     const calculator = new InvoiceCalculator();
     const preview = new InvoicePreview();
-    const sheetsIntegration = new GoogleSheetsIntegration();
-    const pdfGenerator = new PDFGenerator();
+    const invoiceGenerator = new InvoiceGenerator();
 
     // Set default dates
     const today = new Date().toISOString().split('T')[0];

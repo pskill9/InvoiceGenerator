@@ -194,22 +194,17 @@ button {
     background-color: #475569;
 }
 
-#generate-pdf {
-    background-color: var(--success-color);
-    color: white;
-}
-
-#generate-pdf:hover {
-    background-color: #15803d;
-}
-
-#send-to-sheets {
+#generate-invoice {
     background-color: var(--primary-color);
     color: white;
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
 }
 
-#send-to-sheets:hover {
+#generate-invoice:hover {
     background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .modal {
