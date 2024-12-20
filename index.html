@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Invoice Generator</h1>
+            <div id="company-preview">
+                <img id="company-logo" src="" alt="Company Logo">
+                <div id="company-details"></div>
+            </div>
+        </header>
+
+        <main>
+            <form id="invoice-form">
+                <section class="form-section">
+                    <h2>Client Information</h2>
+                    <div class="form-group">
+                        <label for="client-name">Client Name</label>
+                        <input type="text" id="client-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-email">Client Email</label>
+                        <input type="email" id="client-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client-address">Client Address</label>
+                        <textarea id="client-address" required></textarea>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h2>Invoice Details</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="invoice-date">Date</label>
+                            <input type="date" id="invoice-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="due-date">Due Date</label>
+                            <input type="date" id="due-date" required>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h2>Items</h2>
+                    <div id="items-container">
+                        <div class="item-row">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="item-description" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" class="item-quantity" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Rate</label>
+                                <input type="number" class="item-rate" min="0" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" class="item-amount" readonly>
+                            </div>
+                            <button type="button" class="remove-item">×</button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-item">Add Item</button>
+                </section>
+
+                <section class="form-section totals">
+                    <div class="totals-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">0.00</span>
+                    </div>
+                    <div class="totals-row">
+                        <span>Tax (<span id="tax-rate">10</span>%):</span>
+                        <span id="tax-amount">0.00</span>
+                    </div>
+                    <div class="totals-row total">
+                        <span>Total:</span>
+                        <span id="total">0.00</span>
+                    </div>
+                </section>
+
+                <section class="form-section actions">
+                    <button type="button" id="preview-btn">Preview Invoice</button>
+                    <button type="button" id="generate-pdf">Generate PDF</button>
+                    <button type="button" id="send-to-sheets">Send to Google Sheets</button>
+                </section>
+            </form>
+        </main>
+
+        <div id="preview-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="invoice-preview"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- Application Script -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
