@@ -185,26 +185,51 @@ button {
     transition: all 0.2s;
 }
 
+.icon-actions {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end;
+}
+
+.action-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
 #preview-btn {
-    background-color: var(--secondary-color);
-    color: white;
+    color: var(--secondary-color);
 }
 
 #preview-btn:hover {
-    background-color: #475569;
+    color: #475569;
+    transform: scale(1.1);
 }
 
 #generate-invoice {
-    background-color: var(--primary-color);
-    color: white;
-    font-size: 1.1rem;
-    padding: 1rem 2rem;
+    color: var(--primary-color);
 }
 
 #generate-invoice:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: var(--primary-hover);
+    transform: scale(1.1);
+}
+
+.action-icon:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--text-color);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    z-index: 1000;
 }
 
 .modal {

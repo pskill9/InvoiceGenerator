@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -90,8 +91,10 @@
                 </section>
 
                 <section class="form-section actions">
-                    <button type="button" id="preview-btn">Preview Invoice</button>
-                    <button type="button" id="generate-invoice">Generate Invoice</button>
+                    <div class="icon-actions">
+                        <i class="fas fa-eye action-icon" id="preview-btn" title="Preview Invoice"></i>
+                        <i class="fas fa-file-download action-icon" id="generate-invoice" title="Generate Invoice"></i>
+                    </div>
                 </section>
             </form>
         </main>
