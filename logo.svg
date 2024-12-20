@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Main logo group -->
+    <g fill="#E60023"> <!-- Pinterest red -->
+        <!-- Script-style A with rounded edges -->
+        <path d="
+            M200 50
+            C180 50, 160 70, 160 100
+            C160 130, 180 150, 200 150
+            C220 150, 240 130, 240 100
+            L240 350
+            L280 350
+            L280 100
+            C280 60, 240 20, 200 20
+            C160 20, 120 60, 120 100
+            L120 350
+            L160 350
+            L160 150
+            Z
+        "/>
+        
+        <!-- Flowing wave representing NUBIS -->
+        <path d="
+            M100 280
+            Q150 260, 200 280
+            Q250 300, 300 280
+            L300 310
+            Q250 330, 200 310
+            Q150 290, 100 310
+            Z
+        "/>
+    </g>
+</svg>
