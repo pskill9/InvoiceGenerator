@@ -251,10 +251,8 @@ class GoogleSheetsIntegration {
             // With no-cors mode, we can't access the response
             // but the request was sent successfully if no error was thrown
             console.log('Request sent to Google Sheets');
-            alert('Data sent to Google Sheets successfully! Check your spreadsheet for the new entry.');
         } catch (error) {
             console.error('Error sending to Google Sheets:', error);
-            alert(`Failed to send to Google Sheets: ${error.message}`);
         }
     }
 
@@ -314,14 +312,10 @@ class InvoiceGenerator {
             console.log('Sending to Google Sheets...');
             await sheetsIntegration.sendToSheets(invoiceNumber);
 
-            // Success message
-            alert('Invoice generated successfully!\n\n✓ PDF saved\n✓ Data sent to Google Sheets');
-
             // Hide preview
             preview.hidePreview();
         } catch (error) {
             console.error('Error in invoice generation:', error);
-            alert('An error occurred while generating the invoice. Check console for details.');
         }
     }
 
