@@ -143,6 +143,10 @@ class InvoicePreview {
     }
 
     generatePreviewHTML(data) {
+        // Generate invoice number using GoogleSheetsIntegration's method
+        const sheetsIntegration = new GoogleSheetsIntegration();
+        const invoiceNumber = `${config.invoice.prefix}${sheetsIntegration.generateInvoiceNumber()}`;
+
         return `
             <div class="preview-invoice">
                 <div class="preview-header">
@@ -157,6 +161,7 @@ class InvoicePreview {
                     </div>
                     <div class="invoice-info">
                         <h2>INVOICE</h2>
+                        <h3 class="invoice-number">${invoiceNumber}</h3>
                         <p>Date: ${data.invoiceDate}</p>
                         <p>Due Date: ${data.dueDate}</p>
                     </div>
@@ -216,37 +221,76 @@ class GoogleSheetsIntegration {
         document.getElementById('send-to-sheets').addEventListener('click', () => this.sendToSheets());
     }
 
-    async sendToSheets() {
+    generateInvoiceNumber() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const millis = String(now.getMilliseconds()).padStart(3, '0');
+        
+        return `${year}${month}${day}-${hours}${minutes}${seconds}${millis}`;
+    }
+
+    sendToSheets() {
         try {
             const invoiceData = this.gatherInvoiceData();
-            const response = await fetch(this.url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(invoiceData)
+            
+            // Create a hidden form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = this.url;
+            form.target = '_blank'; // Open in new tab
+            form.style.display = 'none';
+
+            // Add data as hidden fields
+            Object.entries(invoiceData).forEach(([key, value]) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                // Convert items array to JSON string
+                input.value = key === 'items' ? JSON.stringify(value) : value;
+                form.appendChild(input);
             });
 
-            if (!response.ok) throw new Error('Failed to send to Google Sheets');
-            
-            alert('Successfully sent to Google Sheets!');
+            // Add form to body and submit
+            document.body.appendChild(form);
+            form.submit();
+
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(form);
+            }, 1000);
+
+            alert('Data sent to Google Sheets! Check the new tab for confirmation.');
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to send to Google Sheets. Please try again.');
+            alert('Failed to send to Google Sheets. Check console for details.');
         }
     }
 
     gatherInvoiceData() {
+        // Get all invoice items
+        const items = Array.from(document.querySelectorAll('.item-row')).map(row => ({
+            description: row.querySelector('.item-description').value,
+            quantity: row.querySelector('.item-quantity').value,
+            rate: row.querySelector('.item-rate').value,
+            amount: row.querySelector('.item-amount').value
+        }));
+
         return {
             timestamp: new Date().toISOString(),
-            invoiceNumber: `${config.invoice.prefix}${config.invoice.startingNumber}`,
+            invoiceNumber: `${config.invoice.prefix}${this.generateInvoiceNumber()}`,
             clientName: document.getElementById('client-name').value,
             clientEmail: document.getElementById('client-email').value,
             invoiceDate: document.getElementById('invoice-date').value,
             dueDate: document.getElementById('due-date').value,
             subtotal: document.getElementById('subtotal').textContent,
             tax: document.getElementById('tax-amount').textContent,
-            total: document.getElementById('total').textContent
+            total: document.getElementById('total').textContent,
+            items: items // This will be converted to JSON string during form submission
         };
     }
 }
@@ -302,7 +346,10 @@ class PDFGenerator {
             );
 
             // Save the PDF
-            pdf.save(`invoice-${new Date().toISOString().split('T')[0]}.pdf`);
+            // Get invoice number for the filename
+            const sheetsIntegration = new GoogleSheetsIntegration();
+            const invoiceNumber = `${config.invoice.prefix}${sheetsIntegration.generateInvoiceNumber()}`;
+            pdf.save(`${invoiceNumber}.pdf`);
             console.log('PDF generated successfully');
 
             // Hide preview

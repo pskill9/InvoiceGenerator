@@ -11,8 +11,7 @@ const config = {
 
     // Invoice Settings
     invoice: {
-        prefix: "INV-",
-        startingNumber: 1001,
+        prefix: "INV-", // Will be combined with timestamp for unique invoice numbers
         dateFormat: "YYYY-MM-DD",
         currency: "USD",
         taxRate: 0.1 // 10%
