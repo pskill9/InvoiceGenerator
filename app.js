@@ -115,9 +115,13 @@ class InvoicePreview {
         });
     }
 
-    showPreview() {
+    showPreview(invoiceNumber = null) {
         const invoiceData = this.gatherInvoiceData();
-        this.previewContent.innerHTML = this.generatePreviewHTML(invoiceData);
+        if (invoiceNumber === null) {
+            const sheetsIntegration = new GoogleSheetsIntegration();
+            invoiceNumber = `${config.invoice.prefix}${sheetsIntegration.generateInvoiceNumber()}`;
+        }
+        this.previewContent.innerHTML = this.generatePreviewHTML(invoiceData, invoiceNumber);
         this.modal.style.display = 'block';
     }
 
@@ -144,11 +148,7 @@ class InvoicePreview {
         };
     }
 
-    generatePreviewHTML(data) {
-        // Generate invoice number using GoogleSheetsIntegration's method
-        const sheetsIntegration = new GoogleSheetsIntegration();
-        const invoiceNumber = `${config.invoice.prefix}${sheetsIntegration.generateInvoiceNumber()}`;
-
+    generatePreviewHTML(data, invoiceNumber) {
         return `
             <div class="preview-invoice">
                 <div class="preview-header">
@@ -289,9 +289,13 @@ class InvoiceGenerator {
 
     async generateInvoice() {
         try {
-            // Show preview first
+            // Generate invoice number once to use throughout the process
+            const sheetsIntegration = new GoogleSheetsIntegration();
+            const invoiceNumber = `${config.invoice.prefix}${sheetsIntegration.generateInvoiceNumber()}`;
+
+            // Show preview first with the generated invoice number
             const preview = new InvoicePreview();
-            preview.showPreview();
+            preview.showPreview(invoiceNumber);
 
             // Wait for preview to render
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -300,10 +304,6 @@ class InvoiceGenerator {
             if (!element) {
                 throw new Error('Preview element not found');
             }
-
-            // Generate invoice number once to use for both PDF and Sheets
-            const sheetsIntegration = new GoogleSheetsIntegration();
-            const invoiceNumber = `${config.invoice.prefix}${sheetsIntegration.generateInvoiceNumber()}`;
 
             // 1. Generate PDF
             console.log('Generating PDF...');
