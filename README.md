@@ -35,7 +35,8 @@ Edit `config.js` to customize:
 2. Go to Tools > Script editor in your Google Sheet
 
 3. Replace the content with this Google Apps Script code:
-   ```javascript
+
+```javascript
    // Configuration
 const SPREADSHEET_ID = ''; // Replace with your spreadsheet ID
 const SHEET_NAME = 'Sheet1'; // Update if you renamed your sheet
@@ -96,7 +97,8 @@ function doPost(e) {
     })).setMimeType(ContentService.MimeType.JSON);
   }
 }
-   ```
+
+```
 
 4. Deploy the script:
    - Click "Deploy" > "New deployment"
