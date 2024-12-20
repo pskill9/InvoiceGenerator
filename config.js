@@ -20,7 +20,7 @@ const config = {
 
     // Google Sheets Integration
     googleSheets: {
-        url: "https://script.google.com/macros/s/AKfycbzhGFZDdMkYgEKtz6iKkbiIzaw9atSTcMtVUYJBIb9RuYDj5Vjk_gtZnlCAVfipKvXP/exec"
+        url: "https://script.google.com/macros/s/AKfycbwS5G2I_uxdTBcNzeEtMifhL2fAPcC00_JGfq8KKZulOYumiHnR7XfdJ-BSpK8mJuyu/exec"
     },
 
     // PDF Settings
