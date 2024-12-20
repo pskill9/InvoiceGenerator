@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="200" height="200" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
     <!-- Encircling circle -->
-    <circle cx="200" cy="200" r="190" stroke="#E60023" stroke-width="15" fill="none"/>
+    <circle cx="200" cy="200" r="190" stroke="#000000" stroke-width="15" fill="none"/>
     <!-- Main logo group -->
-    <g fill="#E60023"> <!-- Pinterest red -->
+    <g fill="#000000"> <!-- Black -->
         <!-- Script-style A with rounded edges -->
         <path d="
             M200 50
