@@ -1,7 +1,9 @@
-import config from './config.js';
+import getConfig from './config.js';
+
+let config = null;
 
 // Initialize company details
-function initializeCompanyDetails() {
+async function initializeCompanyDetails() {
     const logo = document.getElementById('company-logo');
     const companyDetails = document.getElementById('company-details');
     
@@ -355,18 +357,25 @@ class InvoiceGenerator {
 }
 
 // Initialize everything
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize components
-    initializeCompanyDetails();
-    const calculator = new InvoiceCalculator();
-    const preview = new InvoicePreview();
-    const invoiceGenerator = new InvoiceGenerator();
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Load configuration first
+        config = await getConfig();
+        
+        // Initialize components
+        await initializeCompanyDetails();
+        const calculator = new InvoiceCalculator();
+        const preview = new InvoicePreview();
+        const invoiceGenerator = new InvoiceGenerator();
 
-    // Set default dates
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('invoice-date').value = today;
-    
-    const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 30);
-    document.getElementById('due-date').value = dueDate.toISOString().split('T')[0];
+        // Set default dates
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('invoice-date').value = today;
+        
+        const dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 30);
+        document.getElementById('due-date').value = dueDate.toISOString().split('T')[0];
+    } catch (error) {
+        console.error('Error initializing application:', error);
+    }
 });

@@ -1,25 +1,27 @@
-const config = {
+import loadEnv from './loadEnv.js';
+
+const defaultConfig = {
     // Company Details
     company: {
-        name: "ANUBIS CONSULTING",
-        address: "81-19525 73 Avenue",
-        phone: "+1-586-372-8531",
-        email: "team@anubisconsulting.org",
-        website: "anubisconsulting.org",
-        logoPath: "A.png"
+        name: "",
+        address: "",
+        phone: "",
+        email: "",
+        website: "",
+        logoPath: ""
     },
 
     // Invoice Settings
     invoice: {
-        prefix: "INV-", // Will be combined with timestamp for unique invoice numbers
+        prefix: "INV-",
         dateFormat: "YYYY-MM-DD",
         currency: "USD",
-        taxRate: 0.1 // 10%
+        taxRate: 0.1
     },
 
     // Google Sheets Integration
     googleSheets: {
-        url: "https://script.google.com/macros/s/AKfycbwS5G2I_uxdTBcNzeEtMifhL2fAPcC00_JGfq8KKZulOYumiHnR7XfdJ-BSpK8mJuyu/exec"
+        url: ""
     },
 
     // PDF Settings
@@ -35,4 +37,29 @@ const config = {
     }
 };
 
-export default config;
+async function getConfig() {
+    const env = await loadEnv();
+    
+    return {
+        company: {
+            name: env.COMPANY_NAME || defaultConfig.company.name,
+            address: env.COMPANY_ADDRESS || defaultConfig.company.address,
+            phone: env.COMPANY_PHONE || defaultConfig.company.phone,
+            email: env.COMPANY_EMAIL || defaultConfig.company.email,
+            website: env.COMPANY_WEBSITE || defaultConfig.company.website,
+            logoPath: env.COMPANY_LOGO || defaultConfig.company.logoPath
+        },
+        invoice: {
+            prefix: env.INVOICE_PREFIX || defaultConfig.invoice.prefix,
+            dateFormat: env.INVOICE_DATE_FORMAT || defaultConfig.invoice.dateFormat,
+            currency: env.INVOICE_CURRENCY || defaultConfig.invoice.currency,
+            taxRate: parseFloat(env.INVOICE_TAX_RATE || defaultConfig.invoice.taxRate)
+        },
+        googleSheets: {
+            url: env.GOOGLE_SHEETS_URL || defaultConfig.googleSheets.url
+        },
+        pdf: defaultConfig.pdf
+    };
+}
+
+export default getConfig;
