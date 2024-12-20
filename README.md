@@ -36,16 +36,38 @@ Edit `config.js` to customize:
 
 3. Replace the content with this Google Apps Script code:
    ```javascript
-   function doPost(e) {
-     try {
-       // Parse the incoming data
-       const data = JSON.parse(e.postData.contents);
-       
-       // Get the active sheet
-       const sheet = SpreadsheetApp.getActiveSheet();
-       
-       // Append the data as a new row
-       sheet.appendRow([
+   // Configuration
+const SPREADSHEET_ID = ''; // Replace with your spreadsheet ID
+const SHEET_NAME = 'Sheet1'; // Update if you renamed your sheet
+
+function doPost(e) {
+  try {
+    // Validate request
+    if (!e.postData || !e.postData.contents) {
+      throw new Error('No data received');
+    }
+
+    // Parse the JSON data from the request
+    let data;
+    try {
+      data = JSON.parse(e.postData.contents);
+    } catch (error) {
+      throw new Error('Invalid JSON data');
+    }
+
+    // Get the spreadsheet and sheet
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    if (!spreadsheet) {
+      throw new Error('Could not open spreadsheet');
+    }
+
+    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      throw new Error('Could not find specified sheet');
+    }
+
+    // Append the form data to the sheet
+   sheet.appendRow([
          data.timestamp,
          data.invoiceNumber,
          data.clientName,
@@ -56,21 +78,24 @@ Edit `config.js` to customize:
          data.tax,
          data.total
        ]);
-       
-       // Return success
-       return ContentService.createTextOutput(JSON.stringify({
-         'status': 'success',
-         'message': 'Data added successfully'
-       })).setMimeType(ContentService.MimeType.JSON);
-       
-     } catch (error) {
-       // Return error
-       return ContentService.createTextOutput(JSON.stringify({
-         'status': 'error',
-         'message': error.toString()
-       })).setMimeType(ContentService.MimeType.JSON);
-     }
-   }
+    
+    // Return success response
+    return ContentService.createTextOutput(JSON.stringify({
+      'status': 'success',
+      'message': 'Data successfully recorded'
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    // Log error for debugging
+    console.error(error);
+    
+    // Return error response
+    return ContentService.createTextOutput(JSON.stringify({
+      'status': 'error',
+      'message': error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
    ```
 
 4. Deploy the script:
